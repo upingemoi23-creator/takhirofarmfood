@@ -1,116 +1,128 @@
-// ===== Modal =====
+// ===== Announcement bar dismiss =====
 (function () {
-    const modal = document.getElementById('offerModal');
-    const closeBtn = document.getElementById('modalClose');
-
-    function closeModal() {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-
-    // Show modal immediately on load (no delay)
-    document.body.style.overflow = 'hidden';
-
-    // Close on X button
-    closeBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        closeModal();
-    });
-
-    // Close on clicking anywhere on the overlay or modal body
-    modal.addEventListener('click', closeModal);
-
-    // Close on Escape key
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
+    var bar = document.getElementById('announce');
+    var close = document.getElementById('announceClose');
+    if (!bar || !close) return;
+    close.addEventListener('click', function () {
+        bar.classList.add('hidden');
     });
 })();
 
-// ===== Navbar scroll effect =====
+// ===== Sticky nav state on scroll =====
 (function () {
-    const navbar = document.getElementById('navbar');
-    let lastScroll = 0;
-
-    window.addEventListener('scroll', function () {
-        const currentScroll = window.pageYOffset;
-        if (currentScroll > 80) {
-            navbar.classList.add('scrolled');
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    function onScroll() {
+        if (window.pageYOffset > 24) {
+            nav.classList.add('scrolled');
         } else {
-            navbar.classList.remove('scrolled');
+            nav.classList.remove('scrolled');
         }
-        lastScroll = currentScroll;
-    });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 })();
 
 // ===== Mobile menu toggle =====
 (function () {
-    const toggle = document.getElementById('navToggle');
-    const menu = document.getElementById('navMenu');
-
+    var toggle = document.getElementById('navToggle');
+    var list = document.getElementById('navList');
+    if (!toggle || !list) return;
     toggle.addEventListener('click', function () {
-        menu.classList.toggle('active');
+        list.classList.toggle('open');
     });
-
-    // Close menu on link click
-    menu.querySelectorAll('a').forEach(function (link) {
+    list.querySelectorAll('a').forEach(function (link) {
         link.addEventListener('click', function () {
-            menu.classList.remove('active');
+            list.classList.remove('open');
         });
     });
 })();
 
-// ===== Smooth scroll for anchor links =====
+// ===== Smooth scroll with sticky-nav offset =====
 document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {
+        var id = this.getAttribute('href');
+        if (id === '#' || id.length < 2) return;
+        var target = document.querySelector(id);
+        if (!target) return;
         e.preventDefault();
-        var target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            var offset = 80;
-            var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top: top, behavior: 'smooth' });
-        }
+        var nav = document.getElementById('nav');
+        var offset = (nav ? nav.offsetHeight : 0) + 12;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
     });
 });
 
-// ===== Intersection Observer for fade-in animations =====
+// ===== Reveal on scroll =====
 (function () {
-    var observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    var selectors = [
+        '.manifesto-text', '.field-lead', '.field-body', '.field-quote',
+        '.promise-row', '.promise-stats', '.sec-head',
+        '.menu-item', '.table-note',
+        '.scene', '.voice',
+        '.reserve-cta', '.visit-table', '.visit-routes', '.visit-map'
+    ];
+    var nodes = [];
+    selectors.forEach(function (sel) {
+        document.querySelectorAll(sel).forEach(function (el) {
+            el.classList.add('reveal');
+            nodes.push(el);
+        });
+    });
+
+    if (!('IntersectionObserver' in window)) {
+        nodes.forEach(function (el) { el.classList.add('in'); });
+        return;
+    }
 
     var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                entry.target.classList.add('in');
                 observer.unobserve(entry.target);
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-    // Add fade-in class and observe elements
-    var selectors = [
-        '.story-grid', '.story-continuation', '.story-quote',
-        '.philosophy-card', '.stat',
-        '.course-card',
-        '.gallery-item',
-        '.testimonial-card',
-        '.info-block', '.access-map'
-    ];
+    nodes.forEach(function (el) { observer.observe(el); });
+})();
 
-    selectors.forEach(function (selector) {
-        document.querySelectorAll(selector).forEach(function (el) {
-            el.classList.add('fade-in');
-            observer.observe(el);
+// ===== Count-up stats =====
+(function () {
+    var stats = document.querySelectorAll('.pstat-num[data-count]');
+    if (!stats.length || !('IntersectionObserver' in window)) return;
+
+    function animate(el) {
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var duration = 1400;
+        var start = null;
+        function step(ts) {
+            if (!start) start = ts;
+            var p = Math.min((ts - start) / duration, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(eased * target);
+            if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                animate(entry.target);
+                observer.unobserve(entry.target);
+            }
         });
-    });
+    }, { threshold: 0.6 });
 
-    // Add CSS for fade-in
-    var style = document.createElement('style');
-    style.textContent =
-        '.fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }' +
-        '.fade-in.visible { opacity: 1; transform: translateY(0); }';
-    document.head.appendChild(style);
+    stats.forEach(function (el) { observer.observe(el); });
+})();
+
+// ===== Pause marquee on hover =====
+(function () {
+    var track = document.querySelector('.marquee-track');
+    if (!track) return;
+    var marquee = track.closest('.marquee');
+    marquee.addEventListener('mouseenter', function () { track.style.animationPlayState = 'paused'; });
+    marquee.addEventListener('mouseleave', function () { track.style.animationPlayState = 'running'; });
 })();
